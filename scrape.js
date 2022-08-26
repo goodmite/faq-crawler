@@ -2,7 +2,8 @@ const puppeteer = require("puppeteer");
 
 async function scrape(url, test) {
   const browser = await puppeteer.launch({
-    headless: true,
+    // headless: true,
+    devtools: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -72,7 +73,7 @@ async function scrape(url, test) {
         let text = getTextByCopy(node);
 
         if (text === obj[index]) {
-            debugger;;
+            ;
           // we found a question
           //scroll node into view
           node.parentNode.scrollIntoView();
@@ -87,14 +88,14 @@ async function scrape(url, test) {
         }
         await sleep(1000)
         // alert();
-        debugger;
-          debugger;
+        
+          
           if (start) {
             answerObj.push(answerTempStr);
           }
           // console.log(obj[index], answerTempStr, node);
           // console.log('==============');
-          // debugger;
+          // 
           answerTempStr = "";
           index++;
           start = true;
@@ -121,7 +122,7 @@ async function scrape(url, test) {
         }
       }
     }
-    debugger;
+    
     // END
 
     return Promise.resolve([obj, answerObj]);

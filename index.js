@@ -4,8 +4,8 @@ const app = express();
 const port = process.env.port || process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
-  console.clear();
-
+  
+  console.log(req.query.url);
   let data =  await scrape(req.query.url);
   // res.json(data);
   res.setHeader("Content-Type", "application/json");
