@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 
 async function scrape(url, test) {
   const browser = await puppeteer.launch({
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
