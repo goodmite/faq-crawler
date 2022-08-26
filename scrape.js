@@ -2,9 +2,9 @@ const puppeteer = require("puppeteer");
 
 async function scrape(url, test) {
   const browser = await puppeteer.launch({
-    // headless: false,
+    headless: false,
     devtools: false,
-    // args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
 
