@@ -1,7 +1,7 @@
 const express = require("express");
 const {scrape} = require("./scrape");
 const app = express();
-const port = 3000;
+const port = process.env.port || process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
   console.clear();
