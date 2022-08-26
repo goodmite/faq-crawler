@@ -2,13 +2,12 @@ const puppeteer = require("puppeteer");
 
 async function scrape(url, test) {
   const browser = await puppeteer.launch({
-    // headless: false,
-    devtools: true,
-    // args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
 
-  await page.goto(url);
+  await page.goto(url);;
 
   const extractedText = await page.$eval("*", (el) => {
     const selection = window.getSelection();
