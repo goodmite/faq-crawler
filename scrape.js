@@ -1,25 +1,18 @@
 const puppeteer = require("puppeteer");
 
-async function scrape(url, test) {
+async function scrape(url, eventCb) {
   const browser = await puppeteer.launch({
-    // headless: true,
-    devtools: false,
+    headless: true,
+    // devtools: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  eventCb({ name: "process_started", data: null });
   const page = await browser.newPage();
 
-  await page.goto(url);;
+  await page.goto(url);
+  eventCb({ name: "webpage_opened", data: null });
 
-  const extractedText = await page.$eval("*", (el) => {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNode(el);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    return window.getSelection().toString();
-  });
-
-  let [questionsEndingWithQM, answerObj] = await page.evaluate(async () => {
+  let [questionsFound, answerObj] = await page.evaluate(async () => {
     // START
     var obj = [];
 
@@ -62,7 +55,7 @@ async function scrape(url, test) {
     };
 
     await loop(document.querySelector("main") || document.querySelector("body"), fn); // populate obj with questions
-
+    // eventCb({name: 'got_questions', data: obj});
     await loop(
       document.querySelector("main") || document.querySelector("body"), // populate answerObj with answers
       async (node) => {
@@ -124,24 +117,15 @@ async function scrape(url, test) {
     }
     
     // END
-
     return Promise.resolve([obj, answerObj]);
   });
 
   
 
-  //   console.log(questionsEndingWithQM);
-//   questionsEndingWithQM = questionsEndingWithQM.map((e) => e.trim());
-//   let k = questionsEndingWithQM.join("|").replace("?", "?");
-//   let regex = new RegExp(k, "g");
 
-//   let x = extractedText.split(regex);
-//   //   console.log(k);
-//   //   console.log(extractedText);
-//   // console.log(questionsEndingWithQM);
-//   console.log(answerObj);
+  eventCb({ name: "got_all", data: { questionsFound, answerObj } });
   browser.close();
-  return { questionsEndingWithQM, answerObj };
+  return { questionsFound, answerObj };
 }
 
 
