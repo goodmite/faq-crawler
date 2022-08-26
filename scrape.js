@@ -2,8 +2,9 @@ const puppeteer = require("puppeteer");
 
 async function scrape(url, test) {
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // headless: false,
+    devtools: true,
+    // args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
 
@@ -60,9 +61,9 @@ async function scrape(url, test) {
       return true;
     };
 
-    loop(document.querySelector("main") || document.querySelector("body"), fn); // populate obj with questions
+    await loop(document.querySelector("main") || document.querySelector("body"), fn); // populate obj with questions
 
-    loop(
+    await loop(
       document.querySelector("main") || document.querySelector("body"), // populate answerObj with answers
       async (node) => {
         // if (!hasNoChildEl(node)) {
@@ -72,6 +73,7 @@ async function scrape(url, test) {
         let text = getTextByCopy(node);
 
         if (text === obj[index]) {
+            debugger;;
           // we found a question
           //scroll node into view
           node.parentNode.scrollIntoView();
@@ -84,8 +86,9 @@ async function scrape(url, test) {
             setTimeout(resolve, ms);
             });
         }
-        await sleep(100)
-
+        await sleep(1000)
+        // alert();
+        debugger;
           debugger;
           if (start) {
             answerObj.push(answerTempStr);
