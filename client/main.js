@@ -51,7 +51,7 @@ function httpGetAsync(theUrl, callback) {
 document.querySelector("#send").addEventListener("click", () => {
   document.querySelector("#send").textContent = "Sending...";
   httpGetAsync(
-    `http://localhost:3000/?url=${document.querySelector("#url").value}`,
+    `https://faq-crawler.herokuapp.com/?url=${document.querySelector("#url").value}`,
     function (data) {
       
       console.log(data);
