@@ -30,7 +30,7 @@ const socketBody = {
     "payload": null
 }
 
-app.get('/test', (req, res) => {
+app.get('/api/test', (req, res) => {
   // Render a Handlebars template
   res.render('home', { title: 'Express with Handlebars' });
 });
