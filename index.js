@@ -1,5 +1,6 @@
 const express = require("express");
 const {scrape} = require("./scrape");
+const serverless = require("serverless-http");
 var cors = require("cors");
 const {makePostRequest} = require("./ajax");
 const app = express();
@@ -7,6 +8,7 @@ const {engine}  = require('express-handlebars');
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+
 const port = process.env.port || process.env.PORT || 3000;
 
 // disable cors for all requests to the server in express
@@ -54,7 +56,11 @@ app.get("/", async (req, res) => {
   // res.end(JSON.stringify({ ...data }, null, 3));
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
 
+const handler = serverless(api);
+module.exports = {
+  handler
+}
