@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question and Answer</title>
+</head>
+<body>
+    <div style="display: flex;">
+        <div>
+           {{#each links}}
+           <a href="{{link}}">{link}</a>
+           {{/each}}
+        </div>
+ <div id="qa-container" >
+        {{#each qa}}
+           <div style="margin-bottom: 10px;">
+            <h1><strong class="question">{{question}}</strong></h1>
+
+            <h3 style="margin-top: 30px">
+                HTML answer (a, li, strong tags allowed):
+            </h3>
+            <div class="answer">{{{answer}}}</div>
+            <h3 style="margin-top: 30px">
+                Plain text answer:
+            </h3>
+            <div class="answer">{{plain}}</div>
+           </div>
+           <hr>
+        {{/each}}
+        
+    </div>
+    </div>
+   
+</body>
+</html>

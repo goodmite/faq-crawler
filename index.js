@@ -2,10 +2,11 @@ const express = require("express");
 const {scrape} = require("./scrape");
 var cors = require("cors");
 const {makePostRequest} = require("./ajax");
-
-
-
 const app = express();
+const {engine}  = require('express-handlebars');
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
 const port = process.env.port || process.env.PORT || 3000;
 
 // disable cors for all requests to the server in express
@@ -27,20 +28,30 @@ const socketBody = {
     "payload": null
 }
 
-
+app.get('/test', (req, res) => {
+  // Render a Handlebars template
+  res.render('home', { title: 'Express with Handlebars' });
+});
 
 app.get("/", async (req, res) => {
   
   console.log(req.query.url);
-  let data =  await scrape(req.query.url, (detail) => {
+  try{
+    let data =  await scrape(req.query.url, (detail) => {
     // call imi middleware function api
     console.log('ajaxcb', detail);
     socketBody.payload = detail;
     makePostRequest(socketBody);
   });
 
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ ...data }, null, 3));
+
+  res.render('home', { qa: data.answerObj });
+  }catch(e){
+    res.send('error');
+  }
+
+  // res.setHeader("Content-Type", "application/json");
+  // res.end(JSON.stringify({ ...data }, null, 3));
 });
 
 app.listen(port, () => {

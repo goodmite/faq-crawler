@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 async function scrape(url, eventCb) {
   const browser = await puppeteer.launch({
     headless: true,
-    // devtools: false,
+    devtools: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   eventCb({ name: "process_started", data: null });
@@ -14,110 +14,126 @@ async function scrape(url, eventCb) {
 
   let [questionsFound, answerObj] = await page.evaluate(async () => {
     // START
-    var obj = [];
+    removeNodesByNames(document.body, ["BUTTON", "IMG", "iframe"]);
 
-    let answerTempStr = "";
-    let answerObj = [];
-    let index = 0,
-      start = false;
-
-    let getTextByCopy = (node) => {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNode(node);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      return window.getSelection().toString();
-    };
-
-    const fn = (node) => {
-      //  if (!hasNoChildEl(node)) {
-      //    return;
-      //  }
-
-      if (node.textContent.endsWith("?")) {
-        let text = getTextByCopy(node);
-        obj.push(text);
-      }
-    };
-
-    // check if element has no child nodes
-    const hasNoChildEl = (node) => {
-      //iterate over node.childnodes
-      // for (let i = 0; i < node.childNodes.length; i++) {
-      //   //if node is not text node
-      //   if (node.childNodes[i].nodeType === Node.TEXT_NODE) {
-      //     return true;
-      //   }
-      // }
-      // return false
-      return true;
-    };
-
-    await loop(document.querySelector("main") || document.querySelector("body"), fn); // populate obj with questions
-    // eventCb({name: 'got_questions', data: obj});
-    await loop(
-      document.querySelector("main") || document.querySelector("body"), // populate answerObj with answers
-      async (node) => {
-        // if (!hasNoChildEl(node)) {
-        //   return;
-        // }
-        console.log(node);
-        let text = getTextByCopy(node);
-
-        if (text === obj[index]) {
-            ;
-          // we found a question
-          //scroll node into view
-          node.parentNode.scrollIntoView();
-          // click on parent node
-          node.parentNode.click();
-
-        //   sleep for 5 seconds
-        async function sleep(ms) {
-            return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-            });
-        }
-        await sleep(1000)
-        // alert();
-        
-          
-          if (start) {
-            answerObj.push(answerTempStr);
-          }
-          // console.log(obj[index], answerTempStr, node);
-          // console.log('==============');
-          // 
-          answerTempStr = "";
-          index++;
-          start = true;
-        } else {
-          if (start) {
-            answerTempStr += getTextByCopy(node);
+    function findTextNodesWithQuestionMark(node, result = []) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parentNodeName = node.parentNode.nodeName.toLowerCase();
+        const parent = ['div', 'strong', 'span', 'a', 'li', 'h1', 'h2', 'h2', 'h3', 'h4', 'h5', 'h6']
+        if (parent.find(e => e=== parentNodeName)) {
+          if (node.textContent.includes('?')) {
+            result.push(node);
           }
         }
-      }
-    );
-
-    async function loop(node, cb) {
-      // do some thing with the node here
-      var nodes = node.childNodes;
-      for (var i = 0; i < nodes.length; i++) {
-        if (!nodes[i]) {
-          continue;
-        }
-
-        if (nodes[i].childNodes.length > 0) {
-          await loop(nodes[i], cb);
-        } else {
-          await cb(nodes[i]);
+      } else if (node.childNodes) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          findTextNodesWithQuestionMark(node.childNodes[i], result);
         }
       }
+      return result;
+    }
+
+    function removeNodesByNames(mainElement, nodeNames) {
+      nodeNames.forEach(node => {
+        mainElement.querySelectorAll(node.toLowerCase()).forEach(e => e.parentElement.removeChild(e))
+      })
+      
+    // // Check if the node exists and is an element node
+    // if (node && node.nodeType === Node.ELEMENT_NODE) {
+    //     // Check if the node's name matches any of the given node names
+    //     de
+    //     if (nodeNames.find(e => e.toLowerCase() === node.nodeName.toLowerCase())) {
+    //         // Remove the node
+    //         node.parentNode.removeChild(node);
+    //     } else {
+    //         // Recursively remove nodes from children
+    //         const children = node.childNodes;
+    //         for (let i = 0; i < children.length; i++) {
+    //             removeNodesByNames(children[i], nodeNames);
+    //         }
+    //     }
+    // }
+}
+
+    function removeInlineStyles(node) {
+    // Check if the node exists and is an element node
+    if (node && node.nodeType === Node.ELEMENT_NODE) {
+        // Remove inline styles from the current node
+        node.removeAttribute('style');
+        node.removeAttribute('class');
+
+        // Recursively remove inline styles from children nodes
+        const children = node.childNodes;
+        for (let i = 0; i < children.length; i++) {
+            removeInlineStyles(children[i]);
+        }
+    }
+}
+
+
+    function getHTMLBetweenNodes(node1, node2) {
+      if (!node1 || !node2) {
+        throw new Error("One or both nodes are not provided.");
+      }
+
+      // Create a new range
+      let range = document.createRange();
+
+      // Set the range start to the end of node1
+      range.setStartAfter(node1);
+
+      // Set the range end to the start of node2
+      range.setEndBefore(node2);
+
+      // Extract the contents of the range
+      let fragment = range.cloneContents();
+
+      // Create a temporary container to hold the HTML
+      let tempDiv = document.createElement('div');
+      tempDiv.appendChild(fragment);
+
+      // Get the innerHTML of the temporary container and trim any leading/trailing whitespace
+      let htmlBetween = tempDiv;
+      removeInlineStyles(htmlBetween)
+      return htmlBetween;
+    }
+    function removeNewlineAndTab(inputString) {
+      // Use a regular expression to replace newline and tab characters with an empty string
+      return inputString.replace(/[\n\t]/g, '');
+    }
+    function removeMultipleSpaces(str = "") {
+    // Use a regular expression to replace multiple spaces with a single space
+    return str.replace(/\s{2,}/g, ' ');
+}
+    function removeTagsExceptWhiteListed(htmlString = "", whitelist = []) {
+      htmlString = removeNewlineAndTab(htmlString);
+      htmlString = htmlString.trim();
+      // Construct a regular expression pattern to match all tags except those in the whitelist
+      const whitelistPattern = whitelist.length > 0 ? `(?!\/?(?:${whitelist.join('|')})(?=>|\s.*>))` : '';
+
+      // Use the pattern to remove all HTML tags except those in the whitelist
+      return htmlString.replace(new RegExp(`<${whitelistPattern}\/?.*?>`, 'g'), '').trim();
+    }
+
+  
+    // select all text nodes with question mark with parents div, span, a, strong, 
+
+    const textNodes = findTextNodesWithQuestionMark(document.querySelector('main') || document.body);
+    const res = [];
+    for(let i = 0; i < textNodes.length - 1; ++i){
+      res.push(getHTMLBetweenNodes(textNodes[i].parentNode, textNodes[i+1].parentNode));
     }
     
+    const final = textNodes.map((e, i) => {
+      return {
+        question: e.parentNode.textContent?.trim(),
+        answer: removeMultipleSpaces(res[i]?.innerHTML),//removeTagsExceptWhiteListed(res[i]?.innerHTML, ['a', 'li', 'strong', 'i', 'em']),
+        plain: removeMultipleSpaces(removeTagsExceptWhiteListed(res[i]?.textContent, []))
+      }
+    })
+    
     // END
-    return Promise.resolve([obj, answerObj]);
+    return Promise.resolve(['obj', final]);
   });
 
   
