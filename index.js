@@ -49,11 +49,11 @@ app.get("/", async (req, res) => {
 
   res.render('home', { qa: data.answerObj });
   }catch(e){
+    console.log(e)
     res.send(`
     pls append url like this: ?url=https://www.banking.barclaysus.com/faq.html
     OR checkout below urls:
     <ul>
-      <li> <a target="_blank" href="/?url=https://www.eci.gov.in/faq/1/1">/?url=https://www.eci.gov.in/faq/1/1</a> </li>
       <li> <a target="_blank" href="/?url=https://experience.imiconnect.io/faqs/">/?url=https://experience.imiconnect.io/faqs/</a> </li>
       <li> <a target="_blank" href="/?url=https://www.banking.barclaysus.com/faq.html">/?url=https://www.banking.barclaysus.com/faq.html</a> </li>
       <li> <a target="_blank" href="/?url=https://www.passportindia.gov.in/AppOnlineProject/online/faqServicesAvailable">/?url=https://www.passportindia.gov.in/AppOnlineProject/online/faqServicesAvailable</a> </li>
