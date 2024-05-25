@@ -1,8 +1,9 @@
+const { resolve } = require("path");
 const puppeteer = require("puppeteer");
 
 async function scrape(url, eventCb) {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     devtools: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
@@ -12,6 +13,12 @@ async function scrape(url, eventCb) {
   await page.goto(url);
   eventCb({ name: "webpage_opened", data: null });
 
+  await new Promise(resolve =>{
+    setTimeout(_ =>{
+        resolve();
+    }, 1000)
+  })
+
   let [questionsFound, answerObj] = await page.evaluate(async () => {
     // START
     
@@ -20,7 +27,7 @@ async function scrape(url, eventCb) {
       if (node.nodeType === Node.TEXT_NODE) {
         const parentNodeName = node.parentNode.nodeName.toLowerCase();
         const parent = ['div', 'strong', 'span', 'a', 'li', 'h1', 'h2', 'h2', 'h3', 'h4', 'h5', 'h6', "button"]
-        if (parent.find(e => e=== parentNodeName)) {
+        if (true || parent.find(e => e=== parentNodeName)) {
           if (node.textContent.includes('?')) {
             result.push(node);
           }
@@ -141,7 +148,7 @@ async function scrape(url, eventCb) {
 
 
   eventCb({ name: "got_all", data: { questionsFound, answerObj } });
-  browser.close();
+  // browser.close();
   return { questionsFound, answerObj };
 }
 
