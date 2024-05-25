@@ -19,7 +19,7 @@ async function scrape(url, eventCb) {
     function findTextNodesWithQuestionMark(node, result = []) {
       if (node.nodeType === Node.TEXT_NODE) {
         const parentNodeName = node.parentNode.nodeName.toLowerCase();
-        const parent = ['div', 'strong', 'span', 'a', 'li', 'h1', 'h2', 'h2', 'h3', 'h4', 'h5', 'h6']
+        const parent = ['div', 'strong', 'span', 'a', 'li', 'h1', 'h2', 'h2', 'h3', 'h4', 'h5', 'h6', "button"]
         if (parent.find(e => e=== parentNodeName)) {
           if (node.textContent.includes('?')) {
             result.push(node);
