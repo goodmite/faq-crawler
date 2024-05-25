@@ -32,7 +32,7 @@ const socketBody = {
 
 app.get('/api/test', (req, res) => {
   // Render a Handlebars template
-  res.render('home', { title: 'Express with Handlebars' });
+  res.render('home', { title: 'Express with Handlebars. this is test' });
 });
 
 app.get("/", async (req, res) => {
