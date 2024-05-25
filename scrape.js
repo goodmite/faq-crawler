@@ -14,7 +14,7 @@ async function scrape(url, eventCb) {
 
   let [questionsFound, answerObj] = await page.evaluate(async () => {
     // START
-    removeNodesByNames(document.body, ["BUTTON", "IMG", "iframe"]);
+    
 
     function findTextNodesWithQuestionMark(node, result = []) {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -94,6 +94,7 @@ async function scrape(url, eventCb) {
 
       // Get the innerHTML of the temporary container and trim any leading/trailing whitespace
       let htmlBetween = tempDiv;
+      removeNodesByNames(htmlBetween, ["BUTTON", "IMG", "iframe"]);
       removeInlineStyles(htmlBetween)
       return htmlBetween;
     }

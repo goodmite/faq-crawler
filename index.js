@@ -56,11 +56,6 @@ app.get("/", async (req, res) => {
   // res.end(JSON.stringify({ ...data }, null, 3));
 });
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
-// });
-
-const handler = serverless(api);
-module.exports = {
-  handler
-}
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
