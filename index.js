@@ -49,7 +49,20 @@ app.get("/", async (req, res) => {
 
   res.render('home', { qa: data.answerObj });
   }catch(e){
-    res.send('error');
+    res.send(`
+    pls append url like this: ?url=https://www.banking.barclaysus.com/faq.html
+    OR checkout below urls:
+    <ul>
+      <li> <a target="_blank" href="/?url=https://www.banking.barclaysus.com/faq.html">/?url=https://www.banking.barclaysus.com/faq.html</a> </li>
+      <li> <a target="_blank" href="/?url=https://www.passportindia.gov.in/AppOnlineProject/online/faqServicesAvailable">/?url=https://www.passportindia.gov.in/AppOnlineProject/online/faqServicesAvailable</a> </li>
+      <li> <a target="_blank" href="/?url=https://www.japan.travel/en/plan/faq/">/?url=https://www.japan.travel/en/plan/faq/</a> </li>
+      <li> <a target="_blank" href="/?url=https://www.wtm.com/atm/ar-ae/help/faqs.html">/?url=https://www.wtm.com/atm/ar-ae/help/faqs.html</a> </li>
+      <li> <a target="_blank" href="/?url=https://jedge.tv/en/faqs-2/">/?url=https://jedge.tv/en/faqs-2/</a> </li>
+      <li> <a target="_blank" href="/?url=https://telfordbasics.com/pages/faq">/?url=https://telfordbasics.com/pages/faq</a> </li>
+    </ul>
+    
+    
+    `);
   }
 
   // res.setHeader("Content-Type", "application/json");
