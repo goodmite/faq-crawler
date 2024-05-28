@@ -1,14 +1,43 @@
 const { resolve } = require("path");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
+const UserPreferencesPlugin = require('puppeteer-extra-plugin-user-preferences');
+
+puppeteer.use(StealthPlugin());
+puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
+puppeteer.use(UserPreferencesPlugin({
+  userPrefs: {
+    'profile.managed_default_content_settings.images': 2, // Disable images for faster loading
+  }
+}));
 
 async function scrape(url, eventCb) {
   const browser = await puppeteer.launch({
-    headless: true,
-    devtools: false,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: true, // Run browser in non-headless mode
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+      '--start-maximized' // Start the browser maximized
+    ]
   });
   eventCb({ name: "process_started", data: null });
   const page = await browser.newPage();
+
+  // Set viewport and User-Agent to mimic a real browser
+  await page.setViewport({ width: 1920, height: 1080 });
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
+
+  // Set extra HTTP headers
+  await page.setExtraHTTPHeaders({
+    'Referer': 'https://www.google.com/',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Connection': 'keep-alive'
+  });
+
 
   await page.goto(url);
   eventCb({ name: "webpage_opened", data: null });
