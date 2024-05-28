@@ -39,15 +39,21 @@ app.get("/", async (req, res) => {
   
   console.log(req.query.url);
   try{
-    let data =  await scrape("https://www.wikihow.com/Fix-Neck-Pain", (detail) => {
-    // call imi middleware function api
-    console.log('ajaxcb', detail);
-    // socketBody.payload = detail;
-    // makePostRequest(socketBody);
-  });
+    if(req.query.url){
+    let data =  await scrape(req.query.url, (detail) => {
+        // call imi middleware function api
+        console.log('ajaxcb', detail);
+        // socketBody.payload = detail;
+        // makePostRequest(socketBody);
+      });
+      res.render('home', { qa: data.answerObj });
+    }else {
+      throw 'no url';
+    }
+    
 
 
-  res.render('home', { qa: data.answerObj });
+  
   }catch(e){
     console.log("----ERROR--------");
     console.log(e)
