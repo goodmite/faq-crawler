@@ -29,6 +29,10 @@ const socketBody = {
     "event": "test",
     "payload": null
 }
+app.get('/health', (req, res) => {
+  // Render a Handlebars template
+  res.send("healthy");
+});
 
 app.get('/api/test', (req, res) => {
   // Render a Handlebars template
