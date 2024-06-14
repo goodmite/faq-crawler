@@ -9,7 +9,7 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-const port = process.env.port || process.env.PORT || 3000;
+const port = process.env.port || process.env.PORT || 3003;
 
 // disable cors for all requests to the server in express
 app.use(function (req, res, next) {
