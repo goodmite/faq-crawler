@@ -14,7 +14,7 @@ app.use(express.json());
 // Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
-const port = process.env.port || process.env.PORT || 3000;
+const port = process.env.port || process.env.PORT || 3003;
 
 // disable cors for all requests to the server in express
 app.use(function (req, res, next) {
