@@ -226,6 +226,7 @@ async function scrape(url, eventCb) {
         const final = textNodes.map((e, i) => {
             return {
                 question: e.parentNode.textContent?.trim(),
+                // category: url,
                 answer: removeMultipleSpaces(res[i]?.innerHTML),//removeTagsExceptWhiteListed(res[i]?.innerHTML, ['a', 'li', 'strong', 'i', 'em']),
                 plain: removeMultipleSpaces(removeTagsExceptWhiteListed(res[i]?.textContent, []))
             }

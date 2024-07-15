@@ -8,6 +8,11 @@ const {engine}  = require('express-handlebars');
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.port || process.env.PORT || 3000;
 
@@ -21,43 +26,21 @@ app.use(function (req, res, next) {
   next();// this is dummy
 });
 
-const socketBody = {
-    "consumer": {
-        "namespace": "BOT",
-        "enterprise_id": "50001"
-    },
-    "event": "test",
-    "payload": null
-}
 app.get('/health', (req, res) => {
   // Render a Handlebars template
   res.send("healthy");
 });
 
-app.get('/api/test', (req, res) => {
-  // Render a Handlebars template
-  res.render('home', { title: 'Express with Handlebars. this is test' });
-});
-
-app.get("/", async (req, res) => {
-  
-  console.log(req.query.url);
+app.post("/faq/v1/extractByUrl/Hierarchy", async (req, res) => {
+    const url = req.query.url || req.body.url;
+    const access_token = req.body.access_token;
   try{
-    if(req.query.url){
-    let data =  await scrape(req.query.url, (detail) => {
-        // call imi middleware function api
-        console.log('ajaxcb', detail);
-        // socketBody.payload = detail;
-        // makePostRequest(socketBody);
-      });
-      res.render('home', { qa: data.answerObj });
-    }else {
-      throw 'no url';
-    }
-    
-
-
-  
+    if(url){
+        let data =  await scrape(url, (detail) => {});
+          res.json(data.answerObj.map(e => ({...e, category: url})));
+        }else {
+          throw 'no url';
+        }
   }catch(e){
     console.log("----ERROR--------");
     console.log(e)
@@ -73,15 +56,10 @@ app.get("/", async (req, res) => {
       <li> <a target="_blank" href="/?url=https://jedge.tv/en/faqs-2/">/?url=https://jedge.tv/en/faqs-2/</a> </li>
       <li> <a target="_blank" href="/?url=https://telfordbasics.com/pages/faq">/?url=https://telfordbasics.com/pages/faq</a> </li>
     </ul>
-    
-    
     `);
   }
-
-  // res.setHeader("Content-Type", "application/json");
-  // res.end(JSON.stringify({ ...data }, null, 3));
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`listening on port ${port}`);
 });
