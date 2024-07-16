@@ -17,7 +17,13 @@ app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.port || process.env.PORT || 3003;
 
-const allowedOrigins = ['https://staging.webexbotbuilder.com/', 'https://preprod.webexbotbuilder.com/', 'https://webexbotbuilder.com/'];
+const allowedOrigins = [
+    'https://staging.webexbotbuilder.com/',
+    'https://preprod.webexbotbuilder.com/',
+    'https://webexbotbuilder.com/',
+    'https://cdpn.io',
+    'http://localhost:4201'
+];
 
 app.use(function (req, res, next) {
     const origin = req.headers.origin;
@@ -39,7 +45,7 @@ app.use(function (req, res, next) {
 
 app.get('/health', (req, res) => {
     // Render a Handlebars template
-    res.send("healthy");
+    res.send("health check good");
 });
 
 app.post("/faq/v1/extractByUrl/Hierarchy", async (req, res) => {
