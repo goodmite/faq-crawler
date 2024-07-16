@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
 
 app.get('/health', (req, res) => {
     // Render a Handlebars template
-    res.send("healthy");
+    res.send("health check good");
 });
 
 app.post("/faq/v1/extractByUrl/Hierarchy", async (req, res) => {
