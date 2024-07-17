@@ -21,19 +21,15 @@ const allowedOrigins = [
   "https://staging.webexbotbuilder.com",
   "https://preprod.webexbotbuilder.com",
   "https://webexbotbuilder.com",
-  "https://cdpn.io",
+  // "https://cdpn.io",
   "http://localhost:4201",
 ];
 
 app.use(function (req, res, next) {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-  }
+  res.header("Access-Control-Allow-Origin", allowedOrigins);
   res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, user-access-token, auth-token"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   if (req.method === "OPTIONS") {
