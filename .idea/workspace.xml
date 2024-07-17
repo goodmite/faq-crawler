@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2199aace-6549-4c2d-a454-c754e979e738" name="Changes" comment="minor">
+    <list default="true" id="2199aace-6549-4c2d-a454-c754e979e738" name="Changes" comment="cors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +57,7 @@
       <updated>1721042132625</updated>
       <workItem from="1721042133729" duration="6153000" />
       <workItem from="1721134642720" duration="2301000" />
-      <workItem from="1721144739563" duration="5904000" />
+      <workItem from="1721144739563" duration="6766000" />
     </task>
     <task id="LOCAL-00001" summary="schema change">
       <option name="closed" value="true" />
@@ -92,7 +91,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721146368165</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="cors">
+      <option name="closed" value="true" />
+      <created>1721201059481</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1721201059481</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,9 +107,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="schema change" />
-    <MESSAGE value="cors" />
     <MESSAGE value="minor" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor" />
+    <MESSAGE value="cors" />
+    <option name="LAST_COMMIT_MESSAGE" value="cors" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

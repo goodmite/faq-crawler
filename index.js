@@ -26,7 +26,7 @@ const allowedOrigins = [
 ];
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", allowedOrigins);
+  res.header("Access-Control-Allow-Origin", "*"); // Allow all origins
   res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept, user-access-token, auth-token"
@@ -38,6 +38,7 @@ app.use(function (req, res, next) {
     next();
   }
 });
+
 
 app.get("/health", (req, res) => {
   // Render a Handlebars template
