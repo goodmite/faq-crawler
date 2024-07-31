@@ -123,6 +123,38 @@ async function scrape(url, eventCb) {
             // }
         }
 
+        /*
+        * makeSureAllAnchorTagHaveFullLink:
+        * example: instead of <a href="/sidebar">
+        * it will be <a href="full_path_here/sidebar">
+        * */
+        function makeSureAllAnchorTagHaveFullLink(node) {
+            if (!node) return;
+
+            // Check if the node is an element node
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                // If the node is an anchor tag
+                if (node.tagName.toLowerCase() === 'a') {
+                    // Get the current href
+                    let href = node.getAttribute('href');
+
+                    // If href exists and is a relative URL, convert it to absolute
+                    if (href && !href.startsWith('http') && !href.startsWith('#')) {
+                        // Create a new URL object using the base URL from location
+                        let fullUrl = new URL(href, location.href);
+                        node.setAttribute('href', fullUrl.href);
+                    }
+                }
+
+                // Recursively ensure all anchor tags in the children also have full links
+                const children = node.childNodes;
+                for (let i = 0; i < children.length; i++) {
+                    makeSureAllAnchorTagHaveFullLink(children[i]);
+                }
+            }
+        }
+
+
         function removeInlineStyles(node) {
             // Check if the node exists and is an element node
             if (node && node.nodeType === Node.ELEMENT_NODE) {
@@ -163,7 +195,8 @@ async function scrape(url, eventCb) {
             // Get the innerHTML of the temporary container and trim any leading/trailing whitespace
             let htmlBetween = tempDiv;
             removeNodesByNames(htmlBetween, ["BUTTON", "IMG", "iframe"]);
-            removeInlineStyles(htmlBetween)
+            removeInlineStyles(htmlBetween);
+            makeSureAllAnchorTagHaveFullLink();
             return htmlBetween;
         }
 
