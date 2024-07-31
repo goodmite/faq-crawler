@@ -144,6 +144,10 @@ async function scrape(url, eventCb) {
                         let fullUrl = new URL(href, location.href);
                         node.setAttribute('href', fullUrl.href);
                     }
+
+                    // Set the target attribute to open link in a new tab
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
                 }
 
                 // Recursively ensure all anchor tags in the children also have full links
@@ -153,6 +157,7 @@ async function scrape(url, eventCb) {
                 }
             }
         }
+
 
 
         function removeInlineStyles(node) {
