@@ -139,7 +139,7 @@ async function scrape(url, eventCb) {
                     let href = node.getAttribute('href');
 
                     // If href exists and is a relative URL, convert it to absolute
-                    if (href && !href.startsWith('http') && !href.startsWith('#')) {
+                    if (href) {
                         // Create a new URL object using the base URL from location
                         let fullUrl = new URL(href, location.href);
                         node.setAttribute('href', fullUrl.href);
@@ -201,7 +201,7 @@ async function scrape(url, eventCb) {
             let htmlBetween = tempDiv;
             removeNodesByNames(htmlBetween, ["BUTTON", "IMG", "iframe"]);
             removeInlineStyles(htmlBetween);
-            makeSureAllAnchorTagHaveFullLink();
+            makeSureAllAnchorTagHaveFullLink(htmlBetween);
             return htmlBetween;
         }
 
